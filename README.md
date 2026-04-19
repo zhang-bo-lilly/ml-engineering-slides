@@ -32,6 +32,7 @@ Generated outputs (`*.png`, `*.pptx`, `*.docx`) are excluded from git — re-run
 A shared virtual environment is used across all presentations:
 
 ```bash
+cd MM-DD-YYYY/
 source ~/.claude/venvs/aios-slides/bin/activate
 python gen_slides.py
 ```
