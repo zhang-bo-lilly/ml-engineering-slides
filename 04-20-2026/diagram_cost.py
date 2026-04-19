@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.transforms import blended_transform_factory
 import numpy as np
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 EMERALD  = '#10b981'
 AWS3     = '#60a5fa'   # light blue — 3-year
@@ -109,5 +112,5 @@ ax.yaxis.grid(True, color='#e5e5e5', zorder=0, linestyle='--', alpha=0.8)
 ax.set_axisbelow(True)
 
 plt.tight_layout(pad=1.5, rect=[0, 0.06, 1, 0.94])
-plt.savefig('diagram_cost.png', dpi=200, facecolor=LIGHT_BG, bbox_inches='tight')
+plt.savefig(os.path.join(BASE_DIR, 'diagram_cost.png'), dpi=200, facecolor=LIGHT_BG, bbox_inches='tight')
 print('saved diagram_cost.png')

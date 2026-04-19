@@ -5,6 +5,9 @@ No "COMPUTE LAYER" label or footer caption.
 Output: diagram_dag.png (2880 x 925 px)
 """
 from PIL import Image, ImageDraw, ImageFont
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 W, H = 2880, 520
 
@@ -66,5 +69,5 @@ for i, (color, title, body) in enumerate(cards):
                   fill=(255, 255, 255, 220), font=f_body)
         by += 46
 
-img.save('diagram_dag.png')
+img.save(os.path.join(BASE_DIR, 'diagram_dag.png'))
 print('saved diagram_dag.png')
