@@ -1,5 +1,7 @@
+import os
 import matplotlib
 matplotlib.use('Agg')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -138,7 +140,7 @@ for i, spec in enumerate(BOXES):
     bidir_vert(bcx, BOX_Y, WEKA_TOP, spec['arrow_c'])
 
 plt.tight_layout(pad=0)
-plt.savefig('/Users/C271831/Project/compute-layer/diagram-target-architecture.png',
+plt.savefig(os.path.join(BASE_DIR, 'diagram-target-architecture.png'),
             dpi=150, bbox_inches='tight', facecolor=BG)
 plt.close()
 print("Saved diagram-target-architecture.png")

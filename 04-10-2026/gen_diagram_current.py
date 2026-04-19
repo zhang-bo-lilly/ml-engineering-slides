@@ -1,5 +1,7 @@
+import os
 import matplotlib
 matplotlib.use('Agg')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyArrowPatch
@@ -190,7 +192,7 @@ ax.text(7.0, 7.82, 'Current Architecture',
         color='#1a1a1a', fontsize=14, fontweight='bold', ha='center', va='top', zorder=6)
 
 plt.tight_layout(pad=0)
-plt.savefig('/Users/C271831/Project/compute-layer/diagram-current-architecture.png',
+plt.savefig(os.path.join(BASE_DIR, 'diagram-current-architecture.png'),
             dpi=150, bbox_inches='tight', facecolor=BG)
 plt.close()
 print("Saved diagram-current-architecture.png")

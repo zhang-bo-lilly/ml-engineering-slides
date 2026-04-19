@@ -1,5 +1,7 @@
+import os
 import matplotlib
 matplotlib.use('Agg')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -108,7 +110,7 @@ for i, (name, count, detail) in enumerate(ungov_cards):
           color=TEXT_DIM, size=7.5, style='italic')
 
 plt.tight_layout(pad=0.1)
-plt.savefig('/Users/C271831/Project/compute-layer/diagram-estate-full.png',
+plt.savefig(os.path.join(BASE_DIR, 'diagram-estate-full.png'),
             dpi=200, bbox_inches='tight', facecolor=BG)
 plt.close()
 print("Saved diagram-estate-full.png")

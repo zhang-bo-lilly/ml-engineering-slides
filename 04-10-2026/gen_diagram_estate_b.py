@@ -1,5 +1,7 @@
+import os
 import matplotlib
 matplotlib.use('Agg')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -140,7 +142,7 @@ label(stamp_cx, stamp_cy, '$$$  NOT JUSTIFIED',
       color=RED, size=34, weight='bold', zorder=8, rotation=20)
 
 plt.tight_layout(pad=0.1)
-plt.savefig('/Users/C271831/Project/compute-layer/diagram-estate-runai.png',
+plt.savefig(os.path.join(BASE_DIR, 'diagram-estate-runai.png'),
             dpi=200, bbox_inches='tight', facecolor=BG)
 plt.close()
 print("Saved diagram-estate-runai.png")
