@@ -13,7 +13,13 @@ Use the `/aios-slides` slash command. Work one presentation at a time, one slide
 
 ## Python environment
 
-Each presentation directory has its own `.venv`. Always use `.venv/bin/python` to run scripts within that directory.
+A shared venv lives at `~/.claude/venvs/aios-slides/`. Activate it at the start of every session — never create a per-project venv.
+
+```bash
+source ~/.claude/venvs/aios-slides/bin/activate
+```
+
+If a script needs a package not yet installed, add it to the shared venv there.
 
 ## Cleaning
 

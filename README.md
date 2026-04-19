@@ -29,11 +29,15 @@ Generated outputs (`*.png`, `*.pptx`, `*.docx`) are excluded from git — re-run
 
 ## Running scripts
 
-Each presentation directory uses a local `.venv`:
+A shared virtual environment is used across all presentations:
 
 ```bash
-cd MM-DD-YYYY
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/python gen_slides.py
+source ~/.claude/venvs/aios-slides/bin/activate
+python gen_slides.py
+```
+
+If a new package is needed, install it into the shared venv:
+
+```bash
+source ~/.claude/venvs/aios-slides/bin/activate && pip install <package>
 ```
