@@ -32,6 +32,19 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 Use `os.path.join(BASE_DIR, 'filename.png')` for all file reads and writes.
 
+## gen_slides.py must auto-run diagram generators
+
+`gen_slides.py` is the single entry point — the user should never have to run diagram scripts manually. At the top of the `if __name__ == '__main__'` block, call each diagram generator via subprocess before building slides:
+
+```python
+import subprocess, sys
+
+if __name__ == '__main__':
+    for script in ['diagram_foo.py', 'diagram_bar.py']:
+        subprocess.run([sys.executable, os.path.join(BASE_DIR, script)], check=True)
+    # then call slide_01(), slide_02(), ...
+```
+
 ## Cleaning
 
 Run `./clean.sh` from repo root to delete all generated artifacts. Use `./clean.sh --venv` to also remove virtual environments.

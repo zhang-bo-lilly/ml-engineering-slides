@@ -5,6 +5,10 @@ Output: slide_01.png through slide_05.png
 """
 from PIL import Image, ImageDraw, ImageFont
 import os
+import subprocess
+import sys
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 W, H = 2880, 1620
 
@@ -110,7 +114,7 @@ def slide_01():
     y += h2 + 56
     draw.text((cx(sub, f_sub), y), sub, fill=hex2rgb(CAPTION), font=f_sub)
 
-    img.save('slide_01.png')
+    img.save(os.path.join(BASE_DIR, 'slide_01.png'))
     print('saved slide_01.png')
 
 
@@ -141,14 +145,14 @@ def slide_02():
     draw_wrapped(draw, body, f_body, 95, 430, body_w, MID_GRAY, 54)
 
     # Embed diagram_dag.png at bottom, scaled to fill width
-    dag = Image.open('diagram_dag.png')
+    dag = Image.open(os.path.join(BASE_DIR, 'diagram_dag.png'))
     scale = W / dag.width
     new_h = int(dag.height * scale)
     dag_r = dag.resize((W, new_h), Image.LANCZOS)
     paste_y = 720
     img.paste(dag_r, (0, paste_y))
 
-    img.save('slide_02.png')
+    img.save(os.path.join(BASE_DIR, 'slide_02.png'))
     print('saved slide_02.png')
 
 
@@ -213,7 +217,7 @@ def slide_03():
         y = draw_wrapped(draw, body_text, f_body, 95 + INDENT, y, MAX_W - INDENT, '#666666', 50)
         y += 30
 
-    img.save('slide_03.png')
+    img.save(os.path.join(BASE_DIR, 'slide_03.png'))
     print('saved slide_03.png')
 
 
@@ -240,8 +244,8 @@ def slide_04():
     draw_wrapped(draw, frame, f_frame, 95, y, W - 190, MID_GRAY, 54)
 
     # Embed cost chart — widened and centered below text
-    if os.path.exists('diagram_cost.png'):
-        chart = Image.open('diagram_cost.png')
+    if os.path.exists(os.path.join(BASE_DIR, 'diagram_cost.png')):
+        chart = Image.open(os.path.join(BASE_DIR, 'diagram_cost.png'))
         target_w = 2200
         scale = target_w / chart.width
         ch = int(chart.height * scale)
@@ -252,7 +256,7 @@ def slide_04():
     else:
         print('  WARNING: diagram_cost.png not found — skipping chart embed')
 
-    img.save('slide_04.png')
+    img.save(os.path.join(BASE_DIR, 'slide_04.png'))
     print('saved slide_04.png')
 
 
@@ -273,8 +277,8 @@ def slide_05():
 
     # Venn diagram — cap height at 880px so closing quote always fits
     VENN_Y = y
-    if os.path.exists('diagram_venn.png'):
-        venn = Image.open('diagram_venn.png')
+    if os.path.exists(os.path.join(BASE_DIR, 'diagram_venn.png')):
+        venn = Image.open(os.path.join(BASE_DIR, 'diagram_venn.png'))
         MAX_VENN_H = 880
         venn_w = int(venn.width * MAX_VENN_H / venn.height)
         venn = venn.resize((venn_w, MAX_VENN_H), Image.LANCZOS)
@@ -284,11 +288,16 @@ def slide_05():
     else:
         venn_bottom = VENN_Y + 600
 
-    img.save('slide_05.png')
+    img.save(os.path.join(BASE_DIR, 'slide_05.png'))
     print('saved slide_05.png')
 
 
 if __name__ == '__main__':
+    print("Generating diagrams...")
+    for script in ['diagram_dag.py', 'diagram_cost.py', 'diagram_venn.py']:
+        subprocess.run([sys.executable, os.path.join(BASE_DIR, script)], check=True)
+
+    print("Generating slides...")
     slide_01()
     slide_02()
     slide_03()
