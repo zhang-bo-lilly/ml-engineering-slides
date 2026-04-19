@@ -33,7 +33,8 @@ A shared virtual environment is used across all presentations:
 ```bash
 cd MM-DD-YYYY/
 source ~/.claude/venvs/aios-slides/bin/activate
-python gen_slides.py
+python gen_slides.py      # runs diagram generators, then builds slides
+python assemble_pptx.py   # assembles slides into .pptx
 ```
 
 If a new package is needed, install it into the shared venv:

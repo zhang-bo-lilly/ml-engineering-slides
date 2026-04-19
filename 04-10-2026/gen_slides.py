@@ -1,7 +1,7 @@
 """
 gen_slides.py — Generate compute_layer_pptx_slides/ PNGs for the Compute Layer deck.
 
-Run: source .venv/bin/activate && python3 gen_slides.py
+Run: python gen_slides.py   (diagram generators are called automatically)
 
 Outputs (2880×1620 px each):
   compute_layer_pptx_slides/slide_01_anchor.png
@@ -14,6 +14,8 @@ Outputs (2880×1620 px each):
 """
 
 import os
+import subprocess
+import sys
 from PIL import Image, ImageDraw, ImageFont
 
 # ── Output directory ────────────────────────────────────────────────────────
@@ -1229,6 +1231,16 @@ def slide_10():
 # ── Run all ─────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
+    print("Generating diagrams...")
+    for script in [
+        'gen_diagram_estate_a.py',
+        'gen_diagram_estate_b.py',
+        'gen_diagram_current.py',
+        'gen_diagram_target.py',
+        'gen_diagram_quota_flow.py',
+    ]:
+        subprocess.run([sys.executable, os.path.join(BASE_DIR, script)], check=True)
+
     print("Generating slides...")
     slide_01()
     slide_02()
