@@ -10,7 +10,7 @@ for arg in "$@"; do
   [[ "$arg" == "--venv" ]] && REMOVE_VENV=true
 done
 
-find . -not -path './.git/*' \( \
+find . -not -path './.git/*' -not -path '*/assets/*' \( \
   -name '*.png' -o \
   -name '*.pptx' -o \
   -name '*.docx' -o \
