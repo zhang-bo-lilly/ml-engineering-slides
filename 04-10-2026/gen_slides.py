@@ -901,7 +901,7 @@ def slide_09():
 
     # ── App icon + hero row ───────────────────────────────────────────────
     # Icon: 180×180 at x=95, y=95
-    icon_path = os.path.join(BASE_DIR, 'BioNova_Appicon.png')
+    icon_path = os.path.join(BASE_DIR, 'assets', 'BioNova_Appicon.png')
     icon_src  = Image.open(icon_path).convert('RGBA')
     icon_size = 180
     icon_src  = icon_src.resize((icon_size, icon_size), Image.LANCZOS)

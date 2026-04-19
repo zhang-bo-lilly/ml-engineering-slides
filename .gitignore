@@ -13,3 +13,7 @@ __pycache__/
 *.png
 *.pptx
 *.docx
+
+# Static assets (not generated) — keep these
+!**/assets/
+!**/assets/*
