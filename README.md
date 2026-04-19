@@ -14,7 +14,6 @@ MM-DD-YYYY/
   presentation-plan.md # slide plan
   gen_slides.py        # slide generation script
   assemble_pptx.py     # PPTX assembly script
-  requirements.txt     # Python dependencies
   *.py                 # diagram generators
 ```
 
