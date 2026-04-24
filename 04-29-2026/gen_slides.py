@@ -270,6 +270,66 @@ def slide_02(metrics):
     return save_slide(img, 'slide_02.png')
 
 
+# ── Slide 01a (exploratory: merged 01+02, footer = slide-02 hero) ──────────
+
+def slide_01a(metrics):
+    img, draw = new_canvas()
+    chrome(draw)
+
+    margin = 120
+    gap = 40
+
+    # Hero — slide-01 text at top
+    hero(draw, 'LillyPod,', 'by the numbers.')
+
+    # Stat tiles
+    stats = [
+        (str(metrics['projects']),    'active projects'),
+        (str(metrics['users']),       'registered users'),
+        (metrics['workloads_label'],  'workloads completed'),
+        (metrics['cloud_cost_label'], 'equivalent cloud value'),
+    ]
+    tile_w = (W - 2 * margin - 3 * gap) // 4
+    tile_h = 210
+    tile_y = 420
+
+    for i, (num, label) in enumerate(stats):
+        tx = margin + i * (tile_w + gap)
+        draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + tile_h)], fill=C['white'])
+        draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + 5)], fill=C['red'])
+
+        fn = _font('Arial Black', 96)
+        nb = draw.textbbox((0, 0), num, font=fn)
+        nw, nh = nb[2] - nb[0], nb[3] - nb[1]
+        draw.text(
+            (tx + (tile_w - nw) // 2 - nb[0], tile_y + (tile_h - nh) // 2 - 18 - nb[1]),
+            num, font=fn, fill=C['dark'],
+        )
+
+        fl = _font('Arial', 28)
+        lb = draw.textbbox((0, 0), label, font=fl)
+        draw.text(
+            (tx + (tile_w - (lb[2] - lb[0])) // 2, tile_y + tile_h - 36),
+            label, font=fl, fill=C['caption'],
+        )
+
+    # Projects bar chart — full width, natural height
+    chart = Image.open(os.path.join(BASE_DIR, 'projects_gpuhours.png')).convert('RGB')
+    orig_w, orig_h = chart.size
+    chart_y = tile_y + tile_h + 36
+    cw = W - 2 * margin
+    ch = int(cw * orig_h / orig_w)
+    img.paste(chart.resize((cw, ch), Image.LANCZOS), (margin, chart_y))
+
+    # Caption anchored directly below the chart
+    fc = _font('Arial', 32)
+    draw.text((W // 2, chart_y + ch + 16),
+              'One cluster, touching every part of the business.',
+              font=fc, fill=C['caption'], anchor='mt')
+
+    return save_slide(img, 'slide_01a.png')
+
+
 # ── Slide 03 ──────────────────────────────────────────────────────────────
 
 CTAS = [
@@ -388,6 +448,9 @@ if __name__ == '__main__':
         slide_02(metrics),
         slide_03(),
     ]
+
+    print('Building exploratory slides...')
+    slide_01a(metrics)
 
     print('Assembling pptx...')
     assemble_pptx(slides)
