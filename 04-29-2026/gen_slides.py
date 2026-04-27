@@ -173,6 +173,14 @@ def slide_01(metrics):
               'One cluster, touching every part of the business.',
               font=fc, fill=C['caption'], anchor='mt')
 
+    # Footnote — derive "as of" date from last entry in jobs_by_date
+    as_of_iso = max(metrics['jobs_by_date'].keys())
+    from datetime import date
+    as_of = date.fromisoformat(as_of_iso).strftime('%B %-d, %Y')
+    ff = _font('Arial', 24)
+    draw.text((margin, H - 30), f'* Data as of {as_of}',
+              font=ff, fill=C['caption'], anchor='lm')
+
     return save_slide(img, 'slide_01.png')
 
 
