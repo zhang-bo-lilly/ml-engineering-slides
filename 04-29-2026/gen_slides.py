@@ -120,161 +120,6 @@ def load_metrics():
 def slide_01(metrics):
     img, draw = new_canvas()
     chrome(draw)
-    hero(draw, 'LillyPod,', 'by the numbers.')
-
-    stats = [
-        (str(metrics['projects']),         'active projects'),
-        (str(metrics['users']),            'registered users'),
-        (metrics['workloads_label'],       'workloads completed'),
-        (metrics['cloud_cost_label'],      'equivalent cloud value'),
-    ]
-    margin = 120
-    gap = 40
-    tile_w = (W - 2 * margin - 3 * gap) // 4   # 630
-    tile_h = 250
-    tile_y = 450
-
-    for i, (num, label) in enumerate(stats):
-        tx = margin + i * (tile_w + gap)
-        draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + tile_h)], fill=C['white'])
-        draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + 5)], fill=C['red'])
-
-        fn = _font('Arial Black', 110)
-        nb = draw.textbbox((0, 0), num, font=fn)
-        nw, nh = nb[2] - nb[0], nb[3] - nb[1]
-        nx = tx + (tile_w - nw) // 2 - nb[0]
-        ny = tile_y + (tile_h - nh) // 2 - 22 - nb[1]
-        draw.text((nx, ny), num, font=fn, fill=C['dark'])
-
-        fl = _font('Arial', 30)
-        lb = draw.textbbox((0, 0), label, font=fl)
-        lw = lb[2] - lb[0]
-        draw.text((tx + (tile_w - lw) // 2, tile_y + tile_h - 44),
-                  label, font=fl, fill=C['caption'])
-
-    # Time-series chart
-    chart = Image.open(os.path.join(BASE_DIR, 'timeseries.png')).convert('RGB')
-    chart_y = tile_y + tile_h + 48
-    chart_w = W - 2 * margin
-    chart_h = int(chart_w * chart.height / chart.width)
-    chart = chart.resize((chart_w, chart_h), Image.LANCZOS)
-    img.paste(chart, (margin, chart_y))
-
-    # Caption — use date range from metrics
-    since = metrics.get('since_date', '')
-    fc = _font('Arial', 28)
-    cap_y = chart_y + chart_h + 16
-    draw.text((W // 2, cap_y),
-              f'Daily workload submissions · {since} – present',
-              font=fc, fill=C['caption'], anchor='mt')
-
-    return save_slide(img, 'slide_01.png')
-
-
-# ── Slide 02 ──────────────────────────────────────────────────────────────
-
-SQUADS = [
-    {
-        'name': 'alchemy',
-        'type': 'internal',
-        'statement': (
-            'Scaling genomic language models to full training capacity '
-            'to enable genome-wide impact prediction for human genetic variation.'
-        ),
-    },
-    {
-        'name': 'large-mol',
-        'type': 'internal',
-        'statement': (
-            'Training protein folding and design models on all publicly available '
-            'protein structures to accelerate in-silico protein design campaigns.'
-        ),
-    },
-    {
-        'name': 'small-mol',
-        'type': 'internal',
-        'statement': (
-            'Pre-training a graph-based molecular foundation model on over one billion '
-            'molecules to enable generalizable property prediction across diverse chemical space.'
-        ),
-    },
-    {
-        'name': 'tunelab-ai',
-        'type': 'external',
-        'statement': (
-            'Training chemistry and antibody molecular models and developing a universal '
-            'protein–small molecule binding model to advance computational drug design.'
-        ),
-    },
-]
-
-
-def _squad_card(draw, sq, x, y, w, gpu_h):
-    color = C['emerald'] if sq['type'] == 'external' else C['blue']
-
-    pad = 18
-    fhdr = _font('Arial Bold', 38)
-    fbod = _font('Arial', 26)
-    fstat = _font('Arial Black', 34)
-    header_h = 62
-
-    # Measure content to size card to fit
-    lines = wrap_text(draw, sq['statement'], fbod, w - 2 * pad)
-    lh = line_height(draw, fbod)
-    body_h = len(lines) * lh
-    stat_h = draw.textbbox((0, 0), '000K GPU-hrs', font=fstat)[3] - \
-             draw.textbbox((0, 0), '000K GPU-hrs', font=fstat)[1]
-    card_h = header_h + pad + body_h + pad + stat_h + pad
-
-    # Card background
-    draw.rectangle([(x, y), (x + w, y + card_h)], fill=C['white'])
-
-    # Header strip
-    draw.rectangle([(x, y), (x + w, y + header_h)], fill=color)
-    draw.text((x + pad, y + header_h // 2), sq['name'], font=fhdr, fill=C['white'], anchor='lm')
-
-    # External badge
-    if sq['type'] == 'external':
-        badge = 'External'
-        fb = _font('Arial', 22)
-        bw = int(draw.textlength(badge, font=fb)) + 20
-        bh = 30
-        bx = x + w - bw - 14
-        by = y + (header_h - bh) // 2
-        draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=6, fill=C['white'])
-        draw.text((bx + bw // 2, by + bh // 2), badge, font=fb, fill=color, anchor='mm')
-
-    # Body text
-    ty = y + header_h + pad
-    for line in lines:
-        draw.text((x + pad, ty), line, font=fbod, fill=C['gray'])
-        ty += lh
-
-    # GPU-hours stat
-    draw.text((x + w - pad, ty + pad),
-              f'{fmt_hours(gpu_h)} GPU-hrs',
-              font=fstat, fill=C['dark'], anchor='rt')
-
-
-def slide_02(metrics):
-    img, draw = new_canvas()
-    chrome(draw)
-    hero(draw, 'One cluster,', 'touching every part of the business.')
-
-    chart = Image.open(os.path.join(BASE_DIR, 'projects_gpuhours.png')).convert('RGB')
-    margin = 120
-    chart_w = W - 2 * margin
-    chart_h = int(chart_w * chart.height / chart.width)
-    img.paste(chart.resize((chart_w, chart_h), Image.LANCZOS), (margin, 430))
-
-    return save_slide(img, 'slide_02.png')
-
-
-# ── Slide 01a (exploratory: merged 01+02, footer = slide-02 hero) ──────────
-
-def slide_01a(metrics):
-    img, draw = new_canvas()
-    chrome(draw)
 
     margin = 120
     gap = 40
@@ -327,10 +172,10 @@ def slide_01a(metrics):
               'One cluster, touching every part of the business.',
               font=fc, fill=C['caption'], anchor='mt')
 
-    return save_slide(img, 'slide_01a.png')
+    return save_slide(img, 'slide_01.png')
 
 
-# ── Slide 03 ──────────────────────────────────────────────────────────────
+# ── Slide 02 ──────────────────────────────────────────────────────────────
 
 CTAS = [
     {
@@ -360,7 +205,7 @@ CTAS = [
 ]
 
 
-def slide_03():
+def slide_02():
     img, draw = new_canvas()
     chrome(draw)
     hero(draw, 'Not everyone has access like this.', 'At its best when we all use it.')
@@ -411,7 +256,7 @@ def slide_03():
 
         cy += card_h + card_gap
 
-    return save_slide(img, 'slide_03.png')
+    return save_slide(img, 'slide_02.png')
 
 
 # ── PPTX assembly ─────────────────────────────────────────────────────────
@@ -437,7 +282,7 @@ if __name__ == '__main__':
     subprocess.run([sys.executable, os.path.join(BASE_DIR, 'extract_metrics.py')], check=True)
 
     print('Running diagram generators...')
-    for script in ['diagram_timeseries.py', 'diagram_projects.py']:
+    for script in ['diagram_projects.py']:
         subprocess.run([sys.executable, os.path.join(BASE_DIR, script)], check=True)
 
     metrics = load_metrics()
@@ -445,12 +290,8 @@ if __name__ == '__main__':
     print('Building slides...')
     slides = [
         slide_01(metrics),
-        slide_02(metrics),
-        slide_03(),
+        slide_02(),
     ]
-
-    print('Building exploratory slides...')
-    slide_01a(metrics)
 
     print('Assembling pptx...')
     assemble_pptx(slides)
