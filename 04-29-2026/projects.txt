@@ -1,0 +1,25 @@
+Project                      ID             Quota  24h Avg GPUs  7d Avg GPUs  30d Avg GPUs
+------------------------------------------------------------------------------------------
+aios                         4500037            0           0.0          0.0             —
+commercial-mind              4500036            4             —            —             —
+biotdr-cs                    4500034           32          72.9         42.9          12.0
+disc-imaging                 4500033            2           0.0          0.0             —
+ai-neuro                     4500032            8          31.6         16.5           4.7
+genai-comm                   4500031            4           1.0          1.5           0.4
+embodied-ai                  4500030            1             —            —             —
+disc-stats                   4500029            8           0.5          2.3           1.6
+remedi                       4500028            8           8.0          6.1           2.8
+bionova                      4500027            0             —            —             —
+lrl-cadme                    4500026            0             —            —             —
+tunelab-ai                   4500025           24          15.5         18.7          12.3
+lgm                          4500024           16          20.6         19.7           5.2
+common                       4500019          107           0.0          0.0           0.0
+default                      4500018            0           0.1          3.0           8.7
+genai-gs                     4500017           40          16.6         15.3          57.9
+genai-litlens                4500016            2           2.0          1.5           1.8
+single-cell                  4500015           40           3.7         18.8          25.7
+alchemy                      4500014          256         535.2        404.2         220.7
+small-mol                    4500013          192          68.0         67.7         169.0
+large-mol                    4500012          256         168.7        224.8         233.1
+
+19 projects  |  893 GPUs quota total  (excluding default, common)

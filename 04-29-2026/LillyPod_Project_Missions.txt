@@ -1,0 +1,44 @@
+LillyPod — Project Missions | April 6, 2026
+============================================
+
+ai_neuro
+Building a multimodal AI model for Alzheimer's disease that integrates imaging, genomic, and clinical data to improve patient screening, stratification, and disease progression prediction in Lilly trials.
+
+alchemy
+Scaling genomic language models to full training capacity to enable genome-wide impact prediction for human genetic variation.
+
+disc-imaging
+Automating the analysis of imaging assay data across the drug discovery pipeline — from in vitro phenotypic profiling to in vivo tissue mapping — to accelerate development decisions.
+
+disc-stats
+Building scalable agentic AI orchestration frameworks to accelerate scientific research workflows, including antibody design and knowledge synthesis.
+
+embodied-ai
+Evaluating NVIDIA's embodied AI ecosystem to identify how emerging robotics, vision, and simulation technologies can be applied within Lilly.
+
+genai-comm
+Developing language models for adverse event and product complaint recognition from commercial communications to support regulatory drug safety decisions.
+
+genai-gs
+Powering enterprise generative AI capabilities through two tracks: fine-tuning open-source language models for business domains, and continuous pretraining to build Lilly's own internal foundation model.
+
+genai-litlens
+Operating LitLens, Lilly's AI-powered semantic search platform across scientific literature, patents, and internal documents.
+
+large-mol
+Training protein folding and design models on all publicly available protein structures to accelerate in-silico protein design campaigns.
+
+lgm
+Developing a unified model for gene-silencing molecule potency ranking and off-target analysis, alongside property models and codon optimization for mRNA and gene therapy modalities.
+
+remedi
+Developing domain-adapted language models for pharma applications — including scientific literature intelligence (Pubs.AI) and regulatory compliance checking (ConsiCheck) — alongside agentic AI research for pharmacovigilance and regulatory workflows.
+
+single-cell
+Scaling a virtual cell foundation model to 160 million cells to enable concurrent, large-scale experimentation on cell biology AI.
+
+small-mol
+Pre-training a graph-based molecular foundation model on over one billion molecules to enable generalizable property prediction across diverse chemical space.
+
+tunelab-ai
+Training chemistry and antibody molecular models and developing a universal protein-small molecule binding model to advance computational drug design.
