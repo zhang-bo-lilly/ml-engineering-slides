@@ -79,8 +79,16 @@ def new_canvas():
     return img, ImageDraw.Draw(img)
 
 
+def _draw_tracked(draw, x, y, text, font, fill, spacing=3):
+    """Draw text with per-character letter spacing (PIL has no native tracking)."""
+    for ch in text:
+        draw.text((x, y), ch, font=font, fill=fill, anchor='lm')
+        bb = draw.textbbox((0, 0), ch, font=font)
+        x += bb[2] - bb[0] + spacing
+
+
 def chrome(draw):
-    draw.text((95, 52), BREADCRUMB, font=_font('Arial', 28), fill=C['red'], anchor='lm')
+    _draw_tracked(draw, 95, 52, BREADCRUMB, _font('Arial', 28), C['red'], spacing=3)
     draw.rectangle([(0, H - 18), (W, H)], fill=C['red'])
 
 
