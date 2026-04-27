@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 W, H = 2880, 1620
 
 C = {
-    'bg':      (247, 247, 247),
+    'bg':      (255, 255, 255),
     'dark':    (26,  26,  26),
     'red':     (228, 0,   43),
     'gray':    (51,  51,  51),
@@ -31,15 +31,18 @@ def _font(name, size):
     if key in _fcache:
         return _fcache[key]
     paths = {
-        'Arial Black': [
+        'DINPro-Black': [
+            '/Library/Fonts/Managed/DINPro-Black_2101789218.otf',
             '/Library/Fonts/Arial Black.ttf',
             '/System/Library/Fonts/Supplemental/Arial Black.ttf',
         ],
-        'Arial Bold': [
+        'DINPro-Bold': [
+            '/Library/Fonts/Managed/DINPro-Bold_2206996677.otf',
             '/Library/Fonts/Arial Bold.ttf',
             '/System/Library/Fonts/Supplemental/Arial Bold.ttf',
         ],
-        'Arial': [
+        'DINPro': [
+            '/Library/Fonts/Managed/DINPro_2510102162.otf',
             '/Library/Fonts/Arial.ttf',
             '/System/Library/Fonts/Supplemental/Arial.ttf',
         ],
@@ -88,12 +91,12 @@ def _draw_tracked(draw, x, y, text, font, fill, spacing=3):
 
 
 def chrome(draw):
-    _draw_tracked(draw, 95, 52, BREADCRUMB, _font('Arial', 28), C['red'], spacing=3)
+    _draw_tracked(draw, 95, 52, BREADCRUMB, _font('DINPro-Bold', 28), C['red'], spacing=3)
     draw.rectangle([(0, H - 18), (W, H)], fill=C['red'])
 
 
 def hero(draw, line1, line2, y=130, size=110):
-    f = _font('Arial Black', size)
+    f = _font('DINPro-Black', size)
     draw.text((120, y), line1, font=f, fill=C['dark'], anchor='lt')
     bb = draw.textbbox((0, 0), line1, font=f)
     lh = bb[3] - bb[1] + 14
@@ -151,7 +154,7 @@ def slide_01(metrics):
         draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + tile_h)], fill=C['white'])
         draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + 5)], fill=C['red'])
 
-        fn = _font('Arial Black', 96)
+        fn = _font('DINPro-Black', 96)
         nb = draw.textbbox((0, 0), num, font=fn)
         nw, nh = nb[2] - nb[0], nb[3] - nb[1]
         num_color = C['red'] if i == 3 else C['dark']
@@ -160,7 +163,7 @@ def slide_01(metrics):
             num, font=fn, fill=num_color,
         )
 
-        fl = _font('Arial', 28)
+        fl = _font('DINPro', 28)
         lb = draw.textbbox((0, 0), label, font=fl)
         draw.text(
             (tx + (tile_w - (lb[2] - lb[0])) // 2, tile_y + tile_h - 36),
@@ -176,7 +179,7 @@ def slide_01(metrics):
     img.paste(chart.resize((cw, ch), Image.LANCZOS), (margin, chart_y))
 
     # Caption anchored directly below the chart
-    fc = _font('Arial', 32)
+    fc = _font('DINPro', 32)
     draw.text((W // 2, chart_y + ch + 16),
               'One cluster, touching every part of the business.',
               font=fc, fill=C['caption'], anchor='mt')
@@ -185,7 +188,7 @@ def slide_01(metrics):
     as_of_iso = max(metrics['jobs_by_date'].keys())
     from datetime import date
     as_of = date.fromisoformat(as_of_iso).strftime('%B %-d, %Y')
-    ff = _font('Arial', 24)
+    ff = _font('DINPro', 24)
     draw.text((margin, H - 30), f'* Data as of {as_of}',
               font=ff, fill=C['caption'], anchor='lm')
 
@@ -234,9 +237,9 @@ def slide_02():
     pad_v = 80
     pad_h = 30
 
-    fn = _font('Arial Bold', 26)
-    ft = _font('Arial Bold', 52)
-    fb = _font('Arial', 34)
+    fn = _font('DINPro-Bold', 26)
+    ft = _font('DINPro-Bold', 52)
+    fb = _font('DINPro', 34)
     lh_title = line_height(draw, ft, extra=10)
     lh_body = line_height(draw, fb, extra=8)
     text_w = card_w - 2 * pad_h
