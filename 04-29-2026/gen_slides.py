@@ -132,7 +132,7 @@ def slide_01(metrics):
         (str(metrics['projects']),    'active projects'),
         (str(metrics['users']),       'registered users'),
         (metrics['workloads_label'],  'workloads completed'),
-        (metrics['cloud_cost_label'], 'equivalent cloud value'),
+        (metrics['cloud_cost_label'] + '*', 'cloud cost avoidance'),
     ]
     tile_w = (W - 2 * margin - 3 * gap) // 4
     tile_h = 210
@@ -146,9 +146,10 @@ def slide_01(metrics):
         fn = _font('Arial Black', 96)
         nb = draw.textbbox((0, 0), num, font=fn)
         nw, nh = nb[2] - nb[0], nb[3] - nb[1]
+        num_color = C['red'] if i == 3 else C['dark']
         draw.text(
             (tx + (tile_w - nw) // 2 - nb[0], tile_y + (tile_h - nh) // 2 - 18 - nb[1]),
-            num, font=fn, fill=C['dark'],
+            num, font=fn, fill=num_color,
         )
 
         fl = _font('Arial', 28)
