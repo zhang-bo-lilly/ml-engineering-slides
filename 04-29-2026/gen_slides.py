@@ -293,38 +293,32 @@ def slide_02():
 def slide_02a():
     img, draw = new_canvas()
     chrome(draw, page_num=6)
-    hero_bottom = hero(draw, 'Not everyone has access like this.', 'At its best when we all use it.')
+    hero(draw, 'Not everyone has access like this.', 'At its best when we all use it.')
 
-    c_margin = 50
-    c_gap = 20
-    card_top = hero_bottom + 30
-    card_bottom = H - 18 - 20
-    card_w = (W - 2 * c_margin - 2 * c_gap) // 3
-    header_h = 200
+    c_margin = 192
+    c_gap    = 44
+    card_top    = 472
+    card_bottom = 1444
+    card_w   = (W - 2 * c_margin - 2 * c_gap) // 3   # 802 px
+    header_h = 168
 
-    card_colors = [
-        (59,  130, 246),   # blue
-        (16,  185, 129),   # emerald
-        (99,  102, 241),   # indigo
-    ]
-
-    for i, (cta, color) in enumerate(zip(CTAS, card_colors)):
+    for i, cta in enumerate(CTAS):
         cx = c_margin + i * (card_w + c_gap)
 
         # Card background
-        draw.rectangle([(cx, card_top), (cx + card_w, card_bottom)], fill=C['card'])
+        draw.rectangle([(cx, card_top), (cx + card_w, card_bottom)], fill=(249, 250, 251))
 
-        # Colored header panel
-        draw.rectangle([(cx, card_top), (cx + card_w, card_top + header_h)], fill=color)
+        # Emerald header panel (matches target)
+        draw.rectangle([(cx, card_top), (cx + card_w, card_top + header_h)], fill=C['emerald'])
 
-        # Watermark — panel color lightened (35% white blend), right-aligned
+        # Watermark — 35% white blend, right-aligned, vertically centered in header
         wm = f'{i + 1:02d}'
-        fwm = _font('Arial-Black', 160)
+        fwm = _font('Arial-Black', 170)
         wm_bb = draw.textbbox((0, 0), wm, font=fwm)
         wm_color = (
-            int(0.35 * 255 + 0.65 * color[0]),
-            int(0.35 * 255 + 0.65 * color[1]),
-            int(0.35 * 255 + 0.65 * color[2]),
+            int(0.35 * 255 + 0.65 * C['emerald'][0]),
+            int(0.35 * 255 + 0.65 * C['emerald'][1]),
+            int(0.35 * 255 + 0.65 * C['emerald'][2]),
         )
         wm_x = cx + card_w - 20 - (wm_bb[2] - wm_bb[0]) - wm_bb[0]
         wm_y = card_top + (header_h - (wm_bb[3] - wm_bb[1])) // 2 - wm_bb[1]
@@ -334,7 +328,7 @@ def slide_02a():
         fl = _font('Arial-Bold', 18)
         draw.text((cx + 24, card_top + 18), 'LILLYPOD', font=fl, fill=C['white'])
 
-        # Title (white Arial Black, wrapping)
+        # Card title (white Arial Black, wrapping)
         ft = _font('Arial-Black', 38)
         text_w = card_w - 48
         lh_t = line_height(draw, ft, extra=6)
