@@ -20,9 +20,10 @@ C = {
     'blue':    (59,  130, 246),
     'emerald': (16,  185, 129),
     'white':   (255, 255, 255),
+    'card':    (243, 244, 246),
 }
 
-BREADCRUMB = 'AIOS  ·  ADVANCED INTELLIGENCE & RESEARCH  ·  ELI LILLY'
+BREADCRUMB = 'ML ENGINEERING  ·  COMPUTE LAYER UPDATE'
 
 _fcache = {}
 
@@ -87,17 +88,28 @@ def _draw_tracked(draw, x, y, text, font, fill, spacing=3):
         x += bb[2] - bb[0] + spacing
 
 
-def chrome(draw):
-    _draw_tracked(draw, 194, 139, BREADCRUMB, _font('Arial-Bold', 28), C['red'], spacing=3)
+def chrome(draw, page_num=None):
+    _draw_tracked(draw, 194, 139, BREADCRUMB, _font('Arial-Bold', 22), C['red'], spacing=3)
+    if page_num is not None:
+        draw.text((W - 80, H - 35), f'{page_num:02d}',
+                  font=_font('Arial', 28), fill=C['caption'], anchor='rm')
     draw.rectangle([(0, H - 18), (W, H)], fill=C['red'])
 
 
-def hero(draw, line1, line2, y=189, size=110):
+def hero(draw, line1, line2, y=189, size=98):
+    max_w = W - 2 * 120
+    while size > 40:
+        f = _font('Arial-Black', size)
+        if max(draw.textlength(line1, font=f), draw.textlength(line2, font=f)) <= max_w:
+            break
+        size -= 2
     f = _font('Arial-Black', size)
-    draw.text((120, y), line1, font=f, fill=C['dark'], anchor='lt')
-    bb = draw.textbbox((0, 0), line1, font=f)
-    lh = bb[3] - bb[1] + 7
-    draw.text((120, y + lh), line2, font=f, fill=C['red'], anchor='lt')
+    draw.text((194, y), line1, font=f, fill=C['dark'], anchor='lt')
+    bb1 = draw.textbbox((0, 0), line1, font=f)
+    lh = bb1[3] - bb1[1] + 7
+    draw.text((194, y + lh), line2, font=f, fill=C['red'], anchor='lt')
+    bb2 = draw.textbbox((0, 0), line2, font=f)
+    return y + lh + (bb2[3] - bb2[1])
 
 
 def save_slide(img, name):
@@ -127,9 +139,9 @@ def load_metrics():
 
 def slide_01(metrics):
     img, draw = new_canvas()
-    chrome(draw)
+    chrome(draw, page_num=5)
 
-    margin = 120
+    margin = 194
     gap = 40
 
     # Hero — slide-01 text at top
@@ -148,7 +160,7 @@ def slide_01(metrics):
 
     for i, (num, label) in enumerate(stats):
         tx = margin + i * (tile_w + gap)
-        draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + tile_h)], fill=C['white'])
+        draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + tile_h)], fill=C['card'])
         draw.rectangle([(tx, tile_y), (tx + tile_w, tile_y + 5)], fill=C['red'])
 
         fn = _font('Arial-Black', 96)
@@ -224,11 +236,11 @@ CTAS = [
 
 def slide_02():
     img, draw = new_canvas()
-    chrome(draw)
-    hero(draw, 'Not everyone has access like this.', 'At its best when we all use it.')
+    chrome(draw, page_num=6)
+    hero_bottom = hero(draw, 'Not everyone has access like this.', 'At its best when we all use it.')
 
-    margin = 120
-    cta_top = 400
+    margin = 194
+    cta_top = hero_bottom + 30
     card_gap = 44
     card_w = W - 2 * margin
     pad_v = 80
@@ -255,7 +267,7 @@ def slide_02():
                   + len(body_lines) * lh_body
                   + pad_v)
 
-        draw.rectangle([(margin, cy), (margin + card_w, cy + card_h)], fill=C['white'])
+        draw.rectangle([(margin, cy), (margin + card_w, cy + card_h)], fill=C['card'])
         draw.rectangle([(margin, cy), (margin + card_w, cy + 5)], fill=C['red'])
 
         iy = cy + 5 + pad_v
@@ -274,6 +286,72 @@ def slide_02():
         cy += card_h + card_gap
 
     return save_slide(img, 'slide_02.png')
+
+
+# ── Slide 02a (alternative: colored-panel cards) ──────────────────────────
+
+def slide_02a():
+    img, draw = new_canvas()
+    chrome(draw, page_num=6)
+    hero_bottom = hero(draw, 'Not everyone has access like this.', 'At its best when we all use it.')
+
+    c_margin = 50
+    c_gap = 20
+    card_top = hero_bottom + 30
+    card_bottom = H - 18 - 20
+    card_w = (W - 2 * c_margin - 2 * c_gap) // 3
+    header_h = 200
+
+    card_colors = [
+        (59,  130, 246),   # blue
+        (16,  185, 129),   # emerald
+        (99,  102, 241),   # indigo
+    ]
+
+    for i, (cta, color) in enumerate(zip(CTAS, card_colors)):
+        cx = c_margin + i * (card_w + c_gap)
+
+        # Card background
+        draw.rectangle([(cx, card_top), (cx + card_w, card_bottom)], fill=C['card'])
+
+        # Colored header panel
+        draw.rectangle([(cx, card_top), (cx + card_w, card_top + header_h)], fill=color)
+
+        # Watermark — panel color lightened (35% white blend), right-aligned
+        wm = f'{i + 1:02d}'
+        fwm = _font('Arial-Black', 160)
+        wm_bb = draw.textbbox((0, 0), wm, font=fwm)
+        wm_color = (
+            int(0.35 * 255 + 0.65 * color[0]),
+            int(0.35 * 255 + 0.65 * color[1]),
+            int(0.35 * 255 + 0.65 * color[2]),
+        )
+        wm_x = cx + card_w - 20 - (wm_bb[2] - wm_bb[0]) - wm_bb[0]
+        wm_y = card_top + (header_h - (wm_bb[3] - wm_bb[1])) // 2 - wm_bb[1]
+        draw.text((wm_x, wm_y), wm, font=fwm, fill=wm_color)
+
+        # Section label
+        fl = _font('Arial-Bold', 18)
+        draw.text((cx + 24, card_top + 18), 'LILLYPOD', font=fl, fill=C['white'])
+
+        # Title (white Arial Black, wrapping)
+        ft = _font('Arial-Black', 38)
+        text_w = card_w - 48
+        lh_t = line_height(draw, ft, extra=6)
+        ty = card_top + 50
+        for line in wrap_text(draw, cta['title'], ft, text_w):
+            draw.text((cx + 24, ty), line, font=ft, fill=C['white'])
+            ty += lh_t
+
+        # Body text
+        fb = _font('Arial', 30)
+        lh_b = line_height(draw, fb, extra=8)
+        by = card_top + header_h + 28
+        for line in wrap_text(draw, cta['body'], fb, text_w):
+            draw.text((cx + 24, by), line, font=fb, fill=C['gray'])
+            by += lh_b
+
+    return save_slide(img, 'slide_02a.png')
 
 
 # ── PPTX assembly ─────────────────────────────────────────────────────────
@@ -309,6 +387,9 @@ if __name__ == '__main__':
         slide_01(metrics),
         slide_02(),
     ]
+
+    print('Building alternative...')
+    slide_02a()
 
     print('Assembling pptx...')
     assemble_pptx(slides)
