@@ -147,5 +147,67 @@ def draw_cluster_diagram():
     print(f'saved {out}')
 
 
+def draw_cluster_diagram_trimmed():
+    W, H = 2492, 400
+    CARD_GAP = 36
+    CARD_W = (W - 2 * CARD_GAP) // 3
+    HEADER_H = 90
+    PAD = 40
+
+    img = Image.new('RGB', (W, H), '#ffffff')
+    draw = ImageDraw.Draw(img)
+
+    clusters = [
+        {
+            'name': 'LillyPod',
+            'color': '#10b981',
+            'specs': [
+                ('GPUs',   '1,016 × B300'),
+                ('Fabric', '800G compute + storage'),
+            ],
+        },
+        {
+            'name': 'MagTrain',
+            'color': '#6366f1',
+            'specs': [
+                ('GPUs',   '72 × H100  ·  64 × H200  ·  32 × L40S'),
+                ('Fabric', '400G compute + storage'),
+            ],
+        },
+        {
+            'name': 'MD3',
+            'color': '#f59e0b',
+            'specs': [
+                ('GPUs',   '600 × L4  (24 GB, 6-way)'),
+                ('',       '256 × RTX 6000 Pro  (96 GB, 8-way)'),
+                ('Fabric', 'None  ·  NFS over Isilon'),
+            ],
+        },
+    ]
+
+    flabel = _font('Arial-Bold', 26)
+    fvalue = _font('Arial', 30)
+
+    for i, c in enumerate(clusters):
+        cx = i * (CARD_W + CARD_GAP)
+        draw.rectangle([cx, 0, cx + CARD_W, H - 1], fill='#f8f9fa')
+        draw.rectangle([cx, 0, cx + CARD_W, H - 1], outline='#e5e7eb', width=2)
+        draw.rectangle([cx, 0, cx + CARD_W, HEADER_H], fill=c['color'])
+        draw.text((cx + PAD, 18), c['name'], font=_font('Arial-Black', 54), fill='#ffffff')
+
+        ty = HEADER_H + 28
+        for label, value in c['specs']:
+            if label:
+                draw.text((cx + PAD, ty), label.upper(), font=flabel, fill='#9ca3af')
+                ty += 32
+            draw.text((cx + PAD, ty), value, font=fvalue, fill='#1a1a1a')
+            ty += 46
+
+    out = os.path.join(BASE_DIR, 'diagram_clusters_trimmed.png')
+    img.save(out)
+    print(f'saved {out}')
+
+
 if __name__ == '__main__':
     draw_cluster_diagram()
+    draw_cluster_diagram_trimmed()
