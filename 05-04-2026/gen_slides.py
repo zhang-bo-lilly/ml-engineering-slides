@@ -200,7 +200,7 @@ def slide_03():
     _chrome(draw)
     hero_bottom = _hero(draw, '2026 capital cost breakdown.')
 
-    content_top    = hero_bottom + 80
+    content_top    = hero_bottom + 44
     content_bottom = H - BOTTOM_BAR - 40
     content_w      = W - 2 * MARGIN
 
@@ -233,9 +233,8 @@ def slide_03():
         return _text_h(draw, label, font) + PAD_V * 2
 
     base_heights = [_base_h(l, fa_row if t else ft_row, k) for l, _, t, k in rows]
-    slack = max(0, content_bottom - content_top - sum(base_heights)) // len(rows)
-    heights = [h + slack for h in base_heights]
-
+    ROW_PAD = 48  # fixed breathing room per row beyond natural content height
+    heights = [h + ROW_PAD for h in base_heights]
     ty = content_top
     for i, (label, amount, is_total, kind) in enumerate(rows):
         font  = fa_row if is_total else ft_row
@@ -301,19 +300,44 @@ def slide_04():
     content_top = hero_bottom + 72
     content_bottom = H - BOTTOM_BAR - 40
     CALLOUT_H = 210
-    panels_bottom = content_bottom - CALLOUT_H - 32
 
     GAP = 48
     col_w = (W - 2 * MARGIN - GAP) // 2
     left_x = MARGIN
     right_x = MARGIN + col_w + GAP
-    panel_h = panels_bottom - content_top
     HEADER_H = 64
     PAD = 36
+    BULLET_GAP = 36  # fixed gap between bullets and at top/bottom of body area
 
     fhdr_panel = _font('Arial-Bold', 26)
     fb_b = _font('Arial', 36)
     BODY_LEAD = 56
+
+    text_w = col_w - 2 * PAD - 20
+
+    today_items = [
+        'Pipeline crosses cluster boundaries — simulation, featurization, and model retraining each live on a different cluster',
+        'Inter-cluster data transfer is a blocking step — hundreds of GB of trajectory files, hours of wall-clock time, manual handoff at every stage',
+    ]
+    platform_items = [
+        'Pipeline is automatable end-to-end — no manual staging, no inter-cluster copy, no lost time at boundaries',
+        'Cross-cluster dependencies become a scheduler problem, not a data movement problem',
+    ]
+
+    # Measure content to size panels to fit, not to fill
+    def measure_items(items):
+        data = []
+        for item in items:
+            lines = _wrap(draw, item, fb_b, text_w - 22)
+            data.append((lines, len(lines) * BODY_LEAD))
+        return data
+
+    today_data    = measure_items(today_items)
+    platform_data = measure_items(platform_items)
+    n_items = max(len(today_data), len(platform_data))
+    max_content_h = max(sum(h for _, h in today_data), sum(h for _, h in platform_data))
+    panel_h = HEADER_H + PAD + (n_items + 1) * BULLET_GAP + max_content_h + PAD
+    panels_bottom = content_top + panel_h
 
     # Panel backgrounds
     draw.rectangle([left_x, content_top, left_x + col_w, panels_bottom],
@@ -330,39 +354,18 @@ def slide_04():
     draw.text((right_x + PAD, content_top + 16), 'CONSOLIDATED PLATFORM',
               font=fhdr_panel, fill='#ffffff')
 
-    text_w = col_w - 2 * PAD - 20
-
-    today_items = [
-        'Pipeline crosses cluster boundaries — simulation, featurization, and model retraining each live on a different cluster',
-        'Inter-cluster data transfer is a blocking step — hundreds of GB of trajectory files, hours of wall-clock time, manual handoff at every stage',
-    ]
-    platform_items = [
-        'Pipeline is automatable end-to-end — no manual staging, no inter-cluster copy, no lost time at boundaries',
-        'Cross-cluster dependencies become a scheduler problem, not a data movement problem',
-    ]
-
-    def draw_bullets(items, base_x, text_color, dot_color):
-        # Distribute bullets evenly in the panel below the header
-        item_data = []
-        for item in items:
-            lines = _wrap(draw, item, fb_b, text_w - 22)
-            item_data.append((lines, len(lines) * BODY_LEAD))
-
-        avail = panel_h - HEADER_H - PAD
-        total_content = sum(h for _, h in item_data)
-        gap = (avail - total_content) / (len(item_data) + 1)
-        iy = content_top + HEADER_H + PAD + gap
-
+    def draw_bullets(item_data, base_x, text_color, dot_color):
+        iy = content_top + HEADER_H + PAD + BULLET_GAP
         for lines, item_h in item_data:
             draw.ellipse([base_x + PAD, iy + 14, base_x + PAD + 14, iy + 28],
                          fill=dot_color)
             for line in lines:
                 draw.text((base_x + PAD + 22, iy), line, font=fb_b, fill=text_color)
                 iy += BODY_LEAD
-            iy += gap
+            iy += BULLET_GAP
 
-    draw_bullets(today_items,    left_x,  '#374151', '#9ca3af')
-    draw_bullets(platform_items, right_x, '#166534', '#10b981')
+    draw_bullets(today_data,    left_x,  '#374151', '#9ca3af')
+    draw_bullets(platform_data, right_x, '#166834', '#10b981')
 
     # VS team callout
     callout_top = panels_bottom + 32
@@ -420,7 +423,7 @@ def slide_05():
 
     CALLOUT_H = 110
     table_bottom = content_bottom - CALLOUT_H - 28
-    row_h = (table_bottom - ty) // len(steps)
+    row_h = min(120, (table_bottom - ty) // len(steps))
 
     # Column x-positions (all relative to MARGIN + 20 start)
     COL_X = MARGIN + 20
